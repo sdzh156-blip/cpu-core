@@ -207,12 +207,14 @@ class ibex_trap_scoreboard extends uvm_scoreboard;
   task automatic check_mip(bit [31:0] mie, bit [31:0] mip);
     bit [31:0] expected;
     expected = '0;
-    expected[3]  = irq_vif.irq_software & mie[3];
-    expected[7]  = irq_vif.irq_timer & mie[7];
-    expected[11] = irq_vif.irq_external & mie[11];
+    // Ibex mip is a purely combinational pending mirror.  It is intentionally
+    // independent of mie; mie is applied later by interrupt enable/arbitration.
+    expected[3]  = irq_vif.irq_software;
+    expected[7]  = irq_vif.irq_timer;
+    expected[11] = irq_vif.irq_external;
 
     for (int i = 0; i < 15; i++) begin
-      expected[16+i] = irq_vif.irq_fast[i] & mie[16+i];
+      expected[16+i] = irq_vif.irq_fast[i];
     end
 
     if ((mip & 32'h7fff_0888) !== (expected & 32'h7fff_0888)) begin
@@ -242,6 +244,7 @@ class ibex_trap_scoreboard extends uvm_scoreboard;
       bit save_evt;
       bit mret_evt;
       bit debug_mode_evt;
+      bit debug_csr_save_evt;
       ibex_pkg::exc_cause_t cause_evt;
 
       bit post_mie;
@@ -257,10 +260,11 @@ class ibex_trap_scoreboard extends uvm_scoreboard;
 
       clk_vif.wait_n_clks(1);
 
-      save_evt       = dut_vif.csr_save_cause;
-      mret_evt       = read_bit("csr_restore_mret_id");
-      debug_mode_evt = dut_vif.debug_mode;
-      cause_evt      = dut_vif.exc_cause;
+      save_evt           = dut_vif.csr_save_cause;
+      mret_evt           = read_bit("csr_restore_mret_id");
+      debug_mode_evt     = dut_vif.debug_mode;
+      debug_csr_save_evt = read_bit("debug_csr_save");
+      cause_evt          = dut_vif.exc_cause;
 
       #1step;
 
@@ -283,7 +287,7 @@ class ibex_trap_scoreboard extends uvm_scoreboard;
 
       check_mip(post_mie_csr, post_mip);
 
-      if (save_evt && !debug_mode_evt) begin
+      if (save_evt && !debug_csr_save_evt && !debug_mode_evt) begin
         trap_count++;
         nesting_depth++;
 

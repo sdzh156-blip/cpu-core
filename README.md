@@ -99,7 +99,7 @@ make run TEST=ibex_trap_irq_single SEED=20260921 ITERATIONS=3 SIMULATOR=vcs
 - `mcause` matches the RTL exception cause presented at save time
 - `mtvec[7:0] == 8'h01` for Ibex vectored mode / 256-byte alignment
 - `mepc[0] == 0`
-- `mip` reflects enabled level-sensitive maskable interrupt inputs
+- `mip` reflects the raw level-sensitive maskable interrupt inputs independently of `mie`; `mie` controls enable/arbitration
 - selected interrupt follows NMI > fast(lowest ID first) > external > software > timer
 - MRET restores `MIE` and privilege mode
 - trap functional coverage records cause, privilege, interrupt ID, MIE state and nesting depth

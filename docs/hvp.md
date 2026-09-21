@@ -8,7 +8,7 @@ The detailed spreadsheet is maintained separately; this repository keeps the exe
 | TP_EXC_011..015 | illegal, illegal CSR, EBREAK, ECALL M/U | P0/P1 | ibex_trap_illegal |
 | TP_EXC_016..018 | instruction/load/store access fault | P0 | ibex_trap_mem_fault |
 | TP_IRQ_019..022 | software/timer/external/fast IRQ | P0/P1 | ibex_trap_irq_single |
-| TP_IRQ_023..025 | global/local mask, mip, vectored dispatch | P0 | ibex_trap_irq_single |
+| TP_IRQ_023..025 | global/local mask, raw mip pending semantics, vectored dispatch | P0 | ibex_trap_irq_single |
 | TP_IRQ_026..027 | standard + fast priority | P1 | ibex_trap_irq_multiple |
 | TP_IRQ_028 | NMI | P0 | ibex_trap_nmi |
 | TP_IRQ_029 | nested interrupt | P1 | ibex_trap_irq_nested |

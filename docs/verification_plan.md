@@ -56,7 +56,8 @@ Coverpoints:
 - source privilege M/U
 - old MIE 0/1
 - nesting depth
-- simultaneous pending interrupt count
+- simultaneous enabled-pending interrupt count
+- raw `mip` pending state (independent of `mie`)
 
 Crosses:
 
@@ -64,7 +65,7 @@ Crosses:
 - interrupt ID x old MIE
 - nesting depth x trap kind
 
-The official Ibex functional coverage remains enabled as a second source of coverage, especially `interrupt_taken_instr_cross` and `irq_wfi_cross`.
+The trap checker follows the current Ibex RTL semantics where `mip` is a purely combinational mirror of the maskable interrupt inputs; it is not gated by `mie`. The official Ibex functional coverage remains enabled as a second source of coverage, especially `interrupt_taken_instr_cross` and `irq_wfi_cross`.
 
 ## Signoff intent
 

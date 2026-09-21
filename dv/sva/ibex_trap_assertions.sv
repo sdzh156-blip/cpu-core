@@ -3,6 +3,8 @@ module ibex_trap_assertions (
   input logic        rst_ni,
   input logic        csr_save_cause,
   input logic        csr_restore_mret_id,
+  input logic        debug_csr_save,
+  input logic        debug_mode,
   input logic        mstatus_mie,
   input logic        mstatus_mpie,
   input logic [1:0]  mstatus_mpp,
@@ -24,16 +26,16 @@ module ibex_trap_assertions (
     assert property (priv_lvl inside {2'b00, 2'b11});
 
   a_trap_clears_mie:
-    assert property (csr_save_cause |=> !mstatus_mie);
+    assert property ((csr_save_cause && !debug_csr_save && !debug_mode) |=> !mstatus_mie);
 
   a_trap_saves_mie_to_mpie:
-    assert property (csr_save_cause |=> mstatus_mpie == $past(mstatus_mie));
+    assert property ((csr_save_cause && !debug_csr_save && !debug_mode) |=> mstatus_mpie == $past(mstatus_mie));
 
   a_trap_saves_priv_to_mpp:
-    assert property (csr_save_cause |=> mstatus_mpp == $past(priv_lvl));
+    assert property ((csr_save_cause && !debug_csr_save && !debug_mode) |=> mstatus_mpp == $past(priv_lvl));
 
   a_trap_enters_machine:
-    assert property (csr_save_cause |=> priv_lvl == 2'b11);
+    assert property ((csr_save_cause && !debug_csr_save && !debug_mode) |=> priv_lvl == 2'b11);
 
   a_mret_restores_mie:
     assert property (csr_restore_mret_id |=> mstatus_mie == $past(mstatus_mpie));
@@ -48,6 +50,8 @@ bind ibex_core ibex_trap_assertions u_ibex_trap_assertions (
   .rst_ni              (rst_ni),
   .csr_save_cause      (csr_save_cause),
   .csr_restore_mret_id (csr_restore_mret_id),
+  .debug_csr_save      (debug_csr_save),
+  .debug_mode          (id_stage_i.controller_i.debug_mode_q),
   .mstatus_mie         (cs_registers_i.mstatus_q.mie),
   .mstatus_mpie        (cs_registers_i.mstatus_q.mpie),
   .mstatus_mpp         (cs_registers_i.mstatus_q.mpp),
