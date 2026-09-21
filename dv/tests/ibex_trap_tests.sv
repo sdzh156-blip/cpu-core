@@ -230,6 +230,9 @@ class ibex_trap_nmi_guard_test extends ibex_trap_irq_directed_base_test;
   virtual task send_stimulus();
     vseq.start(env.vseqr);
 
+    // Let directed software install its vector table before using the fact that
+    // MIE=0/mie=0 as the synchronization condition.
+    clk_vif.wait_clks(500);
     // NMI must be accepted even with MIE=0 and mie=0.
     wait (dut_vif.mstatus_mie == 1'b0 && dut_vif.mie == '0);
     drive_irq(31);

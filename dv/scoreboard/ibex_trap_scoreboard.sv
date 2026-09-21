@@ -140,7 +140,7 @@ class ibex_trap_scoreboard extends uvm_scoreboard;
     base = {mtvec[31:8], 8'h00};
     if (!(cause.irq_ext || cause.irq_int)) return base;
     id = cause.irq_int ? 5'd31 : cause.lower_cause;
-    return base + (32'(id) << 2);
+    return base + ({27'b0, id} << 2);
   endfunction
 
   function automatic bit [31:0] expected_mepc();
