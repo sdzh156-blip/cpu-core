@@ -1,19 +1,25 @@
-# Formal / SVA strategy
+# Formal / SVA status
 
-The project-owned properties live in `dv/sva/ibex_trap_assertions.sv`.
+The reusable properties are in `dv/sva/ibex_trap_assertions.sv` and are compiled into the dynamic DV overlay.
 
-They are compiled into the dynamic simulation through the overlay filelist and are intentionally bound at `ibex_core`, so the same file can be used by a commercial formal tool without the UVM environment.
+Implemented properties include:
 
-Initial formal targets:
+- mtvec vectored/alignment invariant
+- mepc bit-0 invariant
+- legal M/U privilege states
+- trap entry clears MIE
+- trap entry copies MIE to MPIE
+- trap entry saves previous privilege in MPP
+- trap entry moves to M-mode
+- MRET restores MIE
+- MRET restores privilege
+- mip mirrors raw level-sensitive maskable IRQ inputs
+- NMI is not re-issued while NMI mode is already active
 
-1. `mtvec[7:0] == 8'h01`
-2. `mepc[0] == 0`
-3. privilege is M or U
-4. trap entry clears MIE
-5. trap entry saves old MIE into MPIE
-6. trap entry saves previous privilege into MPP
-7. trap entry moves current privilege to M
-8. MRET restores MIE from MPIE
-9. MRET restores privilege from MPP
+These properties are written as bindable SVA so the same source can be used in simulation and a commercial Formal flow. A real Formal result is intentionally not claimed until JasperGold / VC Formal / equivalent is run on the target server and produces proof reports.
 
-For a VC Formal/Jasper/Questa Formal run, compile the pinned Ibex RTL plus this SVA file and constrain clocks/reset and legal top-level inputs. Do not claim formal proof completion until the tool produces a clean proof report. The simulation regression still compiles and checks these properties as assertions.
+The first execution milestone is therefore:
+
+1. VCS compiles the SVA with the UVM environment.
+2. Smoke/P0 run with zero assertion failures.
+3. If a Formal tool is available, reuse the same property file for proof and record proved/inconclusive properties.
