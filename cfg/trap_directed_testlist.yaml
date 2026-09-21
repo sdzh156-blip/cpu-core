@@ -1,0 +1,61 @@
+# Appended to the official directed_testlist.yaml by bootstrap_ibex.py.
+
+- test: ibex_trap_directed_exception
+  desc: >
+    Deterministic M/U ECALL, EBREAK, illegal instruction and mtvec WARL test.
+  iterations: 1
+  test_srcs: trap_ext_sw/trap_exception_directed.S
+  ld_script: link.ld
+  includes: .
+  gcc_opts: -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
+            -march=rv32imc -mabi=ilp32
+            -I../../../vendor/riscv-test-env/
+            -I../../../vendor/riscv-test-env/p/
+            -I../../../vendor/riscv-tests/isa/macros/scalar/
+  rtl_test: ibex_trap_exception_test
+  timeout_s: 300
+
+- test: ibex_trap_irq_sweep_directed
+  desc: >
+    Deterministic SW/timer/external/fast[16:30]/NMI interrupt sweep.
+  iterations: 1
+  test_srcs: trap_ext_sw/trap_irq_sweep.S
+  ld_script: link.ld
+  includes: .
+  gcc_opts: -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
+            -march=rv32imc -mabi=ilp32
+            -I../../../vendor/riscv-test-env/
+            -I../../../vendor/riscv-test-env/p/
+            -I../../../vendor/riscv-tests/isa/macros/scalar/
+  rtl_test: ibex_trap_irq_sweep_test
+  timeout_s: 300
+
+- test: ibex_trap_irq_masking_directed
+  desc: >
+    Global MIE masking, local mie masking and level-sensitive pending behavior.
+  iterations: 1
+  test_srcs: trap_ext_sw/trap_irq_masking.S
+  ld_script: link.ld
+  includes: .
+  gcc_opts: -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
+            -march=rv32imc -mabi=ilp32
+            -I../../../vendor/riscv-test-env/
+            -I../../../vendor/riscv-test-env/p/
+            -I../../../vendor/riscv-tests/isa/macros/scalar/
+  rtl_test: ibex_trap_irq_masking_test
+  timeout_s: 300
+
+- test: ibex_trap_nmi_guard_directed
+  desc: >
+    NMI acceptance with all maskable interrupts disabled and nested-NMI suppression.
+  iterations: 1
+  test_srcs: trap_ext_sw/trap_nmi_guard.S
+  ld_script: link.ld
+  includes: .
+  gcc_opts: -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
+            -march=rv32imc -mabi=ilp32
+            -I../../../vendor/riscv-test-env/
+            -I../../../vendor/riscv-test-env/p/
+            -I../../../vendor/riscv-tests/isa/macros/scalar/
+  rtl_test: ibex_trap_nmi_guard_test
+  timeout_s: 300
