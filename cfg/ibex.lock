@@ -1,0 +1,3 @@
+IBEX_REPO=https://github.com/lowRISC/ibex.git
+IBEX_COMMIT=e9f55342edbd27e9e17a0e41b1c95a81abb5eac8
+IBEX_CONFIG=small

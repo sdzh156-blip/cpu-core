@@ -1,0 +1,15 @@
+third_party/
+out/
+logs/
+waves/
+*.vcd
+*.vpd
+*.fsdb
+*.ucdb
+*.vdb
+*.log
+*.jou
+*.wlf
+__pycache__/
+*.pyc
+.venv/

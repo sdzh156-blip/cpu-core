@@ -1,0 +1,17 @@
+p0:
+  - ibex_trap_smoke
+  - ibex_trap_illegal
+  - ibex_trap_mem_fault
+  - ibex_trap_irq_single
+  - ibex_trap_nmi
+p1:
+  - ibex_trap_irq_multiple
+  - ibex_trap_irq_nested
+  - ibex_trap_irq_csr
+p2:
+  - ibex_trap_irq_wfi
+  - ibex_trap_irq_instr
+default_iterations:
+  p0: 3
+  p1: 5
+  p2: 5
