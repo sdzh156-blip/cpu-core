@@ -1,26 +1,18 @@
 # Appended into the pinned Ibex RISCV-DV extension testlist by bootstrap_ibex.py.
 
 - test: ibex_trap_smoke
-  description: >
-    Short trap-subsystem bring-up with random CSR activity, illegal instructions and a single IRQ.
   iterations: 3
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +instr_cnt=1500
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
-    +illegal_instr_ratio=5
+    +instr_cnt=1500 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +randomize_csr=1 +illegal_instr_ratio=5
   rtl_test: ibex_trap_smoke_test
   sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_single_seq=1
+    +require_signature_addr=1 +enable_irq_single_seq=1
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_illegal
-  description: Illegal instruction trap and recovery with trap checker enabled.
   iterations: 15
   gen_test: riscv_rand_instr_test
   gen_opts: >
@@ -28,155 +20,139 @@
   rtl_test: ibex_trap_exception_test
 
 - test: ibex_trap_mem_fault
-  description: Instruction fetch and data load/store error injection.
   iterations: 15
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +require_signature_addr=1
-    +instr_cnt=10000
-    +randomize_csr=1
-    +gen_all_csrs_by_default=1
-    +add_csr_write=MSTATUS,MEPC,MCAUSE,MTVAL,0x7c0,0x7c1
-    +enable_unaligned_load_store=1
-    +suppress_pmp_setup=1
+    +require_signature_addr=1 +instr_cnt=10000 +randomize_csr=1
+    +gen_all_csrs_by_default=1 +add_csr_write=MSTATUS,MEPC,MCAUSE,MTVAL,0x7c0,0x7c1
+    +enable_unaligned_load_store=1 +suppress_pmp_setup=1
     +disable_pmp_exception_handler=1
   rtl_test: ibex_trap_mem_fault_test
   sim_opts: >
-    +enable_mem_intg_err=0
-    +enable_double_fault_detector=0
-    +require_signature_addr=1
-    +enable_bad_intg_on_uninit_access=0
+    +enable_mem_intg_err=0 +enable_double_fault_detector=0
+    +require_signature_addr=1 +enable_bad_intg_on_uninit_access=0
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_irq_single
-  description: Single software/timer/external/fast interrupt flow.
   iterations: 15
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +instr_cnt=10000
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
+    +instr_cnt=10000 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +randomize_csr=1
   rtl_test: ibex_trap_irq_single_test
   sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_single_seq=1
-  compare_opts:
-    compare_final_value_only: 1
-
-- test: ibex_trap_irq_multiple
-  description: Multiple simultaneous interrupts and priority selection.
-  iterations: 10
-  gen_test: riscv_rand_instr_test
-  gen_opts: >
-    +instr_cnt=10000
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
-  rtl_test: ibex_trap_irq_multiple_test
-  sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_multiple_seq=1
+    +require_signature_addr=1 +enable_irq_single_seq=1
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_nmi
-  description: NMI path together with ordinary interrupt-enabled software.
   iterations: 10
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +instr_cnt=8000
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
-  rtl_test: ibex_trap_irq_single_test
+    +instr_cnt=8000 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +randomize_csr=1
+  rtl_test: ibex_trap_nmi_test
   sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_nmi_seq=1
+    +require_signature_addr=1 +enable_irq_nmi_seq=1
+  compare_opts:
+    compare_final_value_only: 1
+
+- test: ibex_trap_irq_multiple
+  iterations: 10
+  gen_test: riscv_rand_instr_test
+  gen_opts: >
+    +instr_cnt=10000 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +randomize_csr=1
+  rtl_test: ibex_trap_irq_multiple_test
+  sim_opts: >
+    +require_signature_addr=1 +enable_irq_multiple_seq=1
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_irq_nested
-  description: Nested interrupt handling with software context save/restore.
   iterations: 10
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +instr_cnt=10000
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +enable_nested_interrupt=1
-    +randomize_csr=1
-    +no_csr_instr=1
+    +instr_cnt=10000 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +enable_nested_interrupt=1 +randomize_csr=1 +no_csr_instr=1
   rtl_test: ibex_trap_irq_nested_test
   sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_multiple_seq=1
-    +enable_irq_nmi_seq=1
-    +enable_nested_irq=1
-    +enable_bad_intg_on_uninit_access=0
+    +require_signature_addr=1 +enable_irq_multiple_seq=1
+    +enable_irq_nmi_seq=1 +enable_nested_irq=1 +enable_bad_intg_on_uninit_access=0
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_irq_wfi
-  description: Inject interrupts after WFI instructions.
   iterations: 15
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +instr_cnt=6000
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
-    +set_mstatus_tw=0
-    +no_wfi=0
+    +instr_cnt=6000 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +randomize_csr=1 +set_mstatus_tw=0 +no_wfi=0
   rtl_test: ibex_trap_irq_wfi_test
   sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_single_seq=1
+    +require_signature_addr=1 +enable_irq_single_seq=1
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_irq_instr
-  description: Inject interrupt stimulus across supported instruction classes.
   iterations: 25
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +instr_cnt=6000
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
-    +no_csr_instr=0
-    +no_ebreak=1
-    +no_fence=0
+    +instr_cnt=6000 +require_signature_addr=1 +enable_interrupt=1
+    +enable_timer_irq=1 +randomize_csr=1 +no_csr_instr=0 +no_ebreak=1 +no_fence=0
     +directed_instr_0=riscv_load_store_rand_instr_stream,40
     +directed_instr_1=riscv_load_store_hazard_instr_stream,40
   rtl_test: ibex_trap_irq_instr_test
   sim_opts: >
-    +require_signature_addr=1
-    +enable_irq_single_seq=1
+    +require_signature_addr=1 +enable_irq_single_seq=1
   compare_opts:
     compare_final_value_only: 1
 
 - test: ibex_trap_irq_csr
-  description: Inject interrupts during dummy writes to xSTATUS and xIE.
   iterations: 10
   gen_test: riscv_rand_instr_test
   gen_opts: >
-    +require_signature_addr=1
-    +enable_interrupt=1
-    +enable_timer_irq=1
-    +randomize_csr=1
-    +enable_dummy_csr_write=1
-    +boot_mode=m
+    +require_signature_addr=1 +enable_interrupt=1 +enable_timer_irq=1
+    +randomize_csr=1 +enable_dummy_csr_write=1 +boot_mode=m
   rtl_test: ibex_trap_irq_csr_test
   sim_opts: >
+    +require_signature_addr=1 +enable_irq_single_seq=1
+  compare_opts:
+    compare_final_value_only: 1
+
+- test: ibex_trap_invalid_csr
+  iterations: 10
+  gen_test: riscv_rand_instr_test
+  gen_opts: >
+    +require_signature_addr=1 +instr_cnt=6000 +num_of_sub_program=0
+    +no_csr_instr=0 +enable_access_invalid_csr_level=1 +boot_mode=u
+  rtl_test: ibex_trap_invalid_csr_test
+  sim_opts: >
     +require_signature_addr=1
-    +enable_irq_single_seq=1
+
+- test: ibex_trap_umode_tw
+  iterations: 10
+  gen_test: riscv_rand_instr_test
+  gen_opts: >
+    +require_signature_addr=1 +gen_debug_section=1 +no_ebreak=1 +instr_cnt=6000
+    +no_csr_instr=1 +no_fence=1 +no_wfi=0 +set_mstatus_tw=1
+    +randomize_csr=1 +num_of_sub_program=0 +boot_mode=u
+  rtl_test: ibex_trap_umode_tw_test
+  sim_opts: >
+    +require_signature_addr=1
+  compare_opts:
+    compare_final_value_only: 1
+    verbose: 1
+
+- test: ibex_trap_irq_umode
+  iterations: 10
+  gen_test: riscv_rand_instr_test
+  gen_opts: >
+    +require_signature_addr=1 +instr_cnt=6000 +num_of_sub_program=0 +boot_mode=u
+    +enable_interrupt=1 +enable_timer_irq=1 +randomize_csr=1 +no_ebreak=1
+  rtl_test: ibex_trap_irq_umode_test
+  sim_opts: >
+    +require_signature_addr=1 +enable_irq_single_seq=1
   compare_opts:
     compare_final_value_only: 1

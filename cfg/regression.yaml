@@ -1,17 +1,20 @@
 p0:
   - ibex_trap_smoke
+  - ibex_trap_directed_exception
   - ibex_trap_illegal
   - ibex_trap_mem_fault
   - ibex_trap_irq_single
-  - ibex_trap_nmi
+  - ibex_trap_irq_masking_directed
+  - ibex_trap_nmi_guard_directed
 p1:
+  - ibex_trap_irq_sweep_directed
   - ibex_trap_irq_multiple
+  - ibex_trap_nmi
   - ibex_trap_irq_nested
-  - ibex_trap_irq_csr
+  - ibex_trap_invalid_csr
+  - ibex_trap_irq_umode
 p2:
+  - ibex_trap_irq_csr
   - ibex_trap_irq_wfi
+  - ibex_trap_umode_tw
   - ibex_trap_irq_instr
-default_iterations:
-  p0: 3
-  p1: 5
-  p2: 5

@@ -28,6 +28,23 @@ class ibex_trap_irq_single_test extends core_ibex_debug_intr_basic_test;
   `IBEX_TRAP_ENV_OVERRIDE
 endclass
 
+class ibex_trap_nmi_test extends core_ibex_debug_intr_basic_test;
+  `uvm_component_utils(ibex_trap_nmi_test)
+  `uvm_component_new
+  `IBEX_TRAP_ENV_OVERRIDE
+
+  virtual task send_stimulus();
+    fork
+      vseq.start(env.vseqr);
+      begin
+        if (cfg.require_signature_addr) wait_for_core_setup();
+        else clk_vif.wait_clks(stimulus_delay);
+        forever send_nmi_stimulus();
+      end
+    join_none
+  endtask
+endclass
+
 class ibex_trap_irq_multiple_test extends core_ibex_debug_intr_basic_test;
   `uvm_component_utils(ibex_trap_irq_multiple_test)
   `uvm_component_new

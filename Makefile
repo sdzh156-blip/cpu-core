@@ -4,7 +4,7 @@ ITERATIONS ?= 1
 COV ?= 1
 TEST ?= ibex_trap_smoke
 
-.PHONY: bootstrap env preflight run smoke p0 p1 p2 regression clean
+.PHONY: bootstrap env preflight run smoke p0 p1 p2 regression report clean
 
 env:
 	python3 scripts/check_env.py
@@ -32,6 +32,9 @@ p2: bootstrap
 
 regression: bootstrap
 	python3 scripts/regress.py all --simulator $(SIMULATOR) --seed $(SEED) --iterations $(ITERATIONS) --cov $(COV)
+
+report:
+	python3 scripts/collect_results.py
 
 clean:
 	rm -rf third_party/ibex/dv/uvm/core_ibex/out
